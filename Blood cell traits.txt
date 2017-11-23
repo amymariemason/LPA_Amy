@@ -1,0 +1,34 @@
+######
+# Author: Amy Mason
+# Date: Oct 2017
+# Goal: Search large data sets of blood cell data for relevant variants, create subset if present
+# Inputs: list of variants, data to search for those variants
+# Outputs: log file reporting missing variants, dataframe containing the subset of larger data matching results for the variants given 
+######
+
+
+# clean workshpace
+rm(list = ls())
+
+# libraries
+library(data.table)
+
+# input file (large data files)
+inputfile<- '//me-filer1/home$/am2609/My Documents/Blood Cell Traits Data/plt_build37_166066_20161212.tsv'
+
+# name output file
+outputfile<- '//me-filer1/home$/am2609/My Documents/Programs/Blood Cell Traits Data/Output/plt.Rda'
+
+# logfile 
+logfile<-"\\\\me-filer1/home$/am2609/My Documents/Programs/Blood Cell Traits Data/Logs/plt.log"
+
+
+# import 43 variants as table
+var43<-read.table("//me-filer1/home$/am2609/My Documents/Programs/Amy 1/Data/43var.txt")
+
+# no chr notation in database, so strip those off the front (I'm assuming the chr is implict in the tsv file)
+# split into chromosome and position
+var43$V2<-substring(var43$V1, 4, 100)
+var43$Missing<-rep(0,43)
+var43 <- cbind(var43, do.call("rbind", strsplit(var43[, "V2"], ":")))
+names(var43)<-
