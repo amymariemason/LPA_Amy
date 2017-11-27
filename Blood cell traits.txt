@@ -31,4 +31,4 @@ var43<-read.table("//me-filer1/home$/am2609/My Documents/Programs/Amy 1/Data/43v
 var43$V2<-substring(var43$V1, 4, 100)
 var43$Missing<-rep(0,43)
 var43 <- cbind(var43, do.call("rbind", strsplit(var43[, "V2"], ":")))
-names(var43)<-
+names(var43)<-c("var", "V2", "missing", "chr", "pos")
