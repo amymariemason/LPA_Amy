@@ -108,9 +108,9 @@ traitmin<- substring(trait,1,3)
 # name input file
 inputfile<-paste('//me-filer1/home$/am2609/My Documents/Blood Cell Traits Data/', trait, '_20161212.tsv', sep="")
 # name output file
-outputfile<- paste (outputfolder, "Output/", trait,".Rda", sep="")
+outputfile<- paste (outputfolder, "Output/", traitmin,".Rda", sep="")
 # logfile 
-logfile<-paste (outputfolder, "Logs/", trait,".log", sep="")
+logfile<-paste (outputfolder, "Logs/", traitmin,".log", sep="")
 #create blank output
 output<-create_blank_file(trait,inputfile = inputfile, outputfolder=outputfolder)
 #fill output
