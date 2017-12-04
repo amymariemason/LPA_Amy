@@ -15,34 +15,13 @@
 rm(list=ls())
 
 
-#install.packages('devtools',lib='C://Users/am2609/R/library')
-library(digest,lib.loc='C://Users/am2609/R/library')
-library(mime,lib.loc='C://Users/am2609/R/library')
-library(ggplot2, lib.loc='C://Users/am2609/R/library')
-library(MendelianRandomization, lib.loc='C://Users/am2609/R/library')
-library(plotly, lib.loc='C://Users/am2609/R/library')
-library(htmlwidgets, lib.loc='C://Users/am2609/R/library')
-library(assertthat, lib.loc='C://Users/am2609/R/library')
-library(stringr, lib.loc='C://Users/am2609/R/library')
+library(ggplot2)
+library(MendelianRandomization)
+library(plotly)
+library(htmlwidgets)
+library(assertthat)
+library(stringr)
 
-#ggplot2 in devtools is struggling to find local packages; load explicity
-library(labeling, lib.loc='C://Users/am2609/R/library')
-library(tidyselect, lib.loc='C://Users/am2609/R/library')
-library(crosstalk, lib.loc='C://Users/am2609/R/library')
-library(yaml, lib.loc='C://Users/am2609/R/library')
-
-#in order to run Rmarkdown
-library(tools)
-library(utils)
-library(methods)
-library(knitr, lib.loc='C://Users/am2609/R/library')
-library(evaluate, lib.loc='C://Users/am2609/R/library')
-library(base64enc, lib.loc='C://Users/am2609/R/library')
-library(rprojroot, lib.loc='C://Users/am2609/R/library')
-library(highr, lib.loc='C://Users/am2609/R/library')
-library(markdown, lib.loc='C://Users/am2609/R/library')
-library(caTools, lib.loc='C://Users/am2609/R/library')
-library(htmltools, lib.loc='C://Users/am2609/R/library')
 
 #set working directory
 #setwd("C://Users/am2609/Dropbox (Personal)/lpamaster/")
@@ -80,13 +59,13 @@ names(traitnames)<-c("trait", "name", "units")
 TLall<-merge(TLframe, traitnames, by="trait", all.x=TRUE)
 
 # create loop
-
+list_save<-vector('list', length(TL))
 for (i in 1:length(TL)){
   # print outcome name
   outcomespec<-as.character(TLall[i,"trait"])
   outcomename<-as.character(TLall[i,"name"])
   outcomeunit<-as.character(TLall[i,"units"])
-  print(as.character(outcomespec))
+  cat(as.character(outcomespec),"\n", as.character(outcomename), as.character(outcomeunit),"\n")
   #add report to new logfile
   # create log file 
   logfile<-paste ("./Logs/", outcomespec,"_mr.log", sep="")
@@ -111,7 +90,7 @@ for (i in 1:length(TL)){
       tryCatch({stopifnot(nrow(outcome3) == nrow(outcome2))
       }, error = function(err.msg){
       # Add error message to the error log file
-      cat("ERROR",  "\n", nrow(outcome3)- nrow(lpa), "variants missing from outcome data\n")
+      cat("ERROR",  "\n", max(nrow(outcome3)- nrow(lpa),0), "variants missing from outcome data\n")
       write.table(outcome3[!(outcome3$pos%in%lpa$pos),c("chr", "pos")], row.names=FALSE, quote=FALSE)
       }
       )
@@ -120,7 +99,7 @@ for (i in 1:length(TL)){
       tryCatch({stopifnot(nrow(outcome3) == nrow(lpa))
       }, error = function(err.msg){
       # Add error message to the error log file
-      cat("ERROR", "\n", nrow(lpa)-nrow(outcome3), "variants missing from outcome data\n")
+      cat("ERROR", "\n", max(nrow(lpa)-nrow(outcome3),0), "variants missing from outcome data\n")
       write.table(lpa[!(lpa$pos%in%outcome3$pos),c("chr", "pos")], row.names=FALSE, quote=FALSE)
       }
       )
@@ -150,28 +129,30 @@ for (i in 1:length(TL)){
       }, 
        error = function(error_message){
                cat("ERROR", "\n", outcomespec, " did not run correctly in mr_ivw\n")
-              message(error_message)
+             print(error_message)
                 },
        warning=function(warn){
               cat("WARNING\n", "outcomespec gave warning in mr_ivw: \n")
-              message(warn)
+              print(warn)
                 }, 
        finally ={
               mr = mr_ivw(mr_input(bx, bxse, by, byse, corr=rho))
                 }
             )
-      # if ran correctly, add to report 
-        mr
-        # attempt at a graph
-        mr_plot(MRdata_input, interactive=TRUE)
-     
+      cat("MR analysis results \n")
+      print(mr)
+      summary_temp<-list(outcomespec, outcomename,outcomeunit,MRdata_input,mr)
+      list_save[[i]]<-summary_temp
+      # end log file
+      sink()
+      sink.number()==0
+} 
       
+#save and add to report
+save(list_save, file = "./Output/results.RData")
   
   
-# end log file
-  sink()
-  sink.number()==0
-}
+
   
 
 
