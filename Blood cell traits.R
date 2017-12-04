@@ -78,7 +78,7 @@ writeLines("This log file is showing which variants are missing from the I73 tsv
 
 # create record of missing variants
 cat("There are a total of  ", num_er, " variants are missing from the input data \n")
-write.table(var43[var43$Missing==1,]$V1, row.names=FALSE, quote=FALSE, col.names=FALSE)
+write.table(var43[var43$missing==1,]$V2, row.names=FALSE, quote=FALSE, col.names=FALSE)
 
 cat("More than one record found for these variants below \n")
 write.table(unique(output[output$duplicate==1,]$V1), row.names=FALSE, quote=FALSE, col.names=FALSE)
