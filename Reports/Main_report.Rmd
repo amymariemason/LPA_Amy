@@ -1,0 +1,67 @@
+---
+title: "Mendelian randomization results for various blood traits and LP(a)"
+author: "Amy Mason"
+date: "6 December 2017"
+output: html_document
+---
+
+## Table of results
+
+```{r setup, include=FALSE}
+require("knitr")
+knitr::opts_chunk$set(echo = TRUE)
+opts_knit$set(root.dir = "C://Users/am2609/Blood Cell Traits Data/Reports/")
+muffleError <- function(x,options) {}
+#hide all error warnings in final document
+knit_hooks$set(error=muffleError)
+knit_hooks$set(warning=muffleError)
+
+library(ggplot2)
+library(MendelianRandomization)
+library(plotly)
+library(htmlwidgets)
+library(assertthat)
+library(stringr)
+library(knitr)
+library(markdown)
+library(rmarkdown)
+library(pander)
+```
+
+```{r echo=FALSE, include=TRUE, results='asis'}
+load("../Output/results.RData")
+
+input <- data.frame(
+  name = sapply(list_save, "[[", 2),
+  units = sapply(list_save, "[[", 3),
+  stringsAsFactors = FALSE
+  )
+out <- NULL
+keep<-data.frame(
+  name = sapply(list_save, "[[", 2),
+  method = "IVW"
+)
+for(i in seq(nrow(input))){
+ keep[i, "estimate"]<- (list_save[[i]][[5]])@Estimate
+ Up<-formatC(list_save[[i]][[5]]@CIUpper, format = "e", digits = 2)
+Low<-formatC(list_save[[i]][[5]]@CILower, format = "e", digits = 2)
+ keep[i, "95% CI"]<- paste("(",Up, ", ", Low, ")", sep="")
+ keep[i, "pvalue"]<- (list_save[[i]][[5]])@Pvalue
+
+ 
+
+    env=new.env() #create a new empty environment, it inherits objects from the current environment.
+  out <- c(out, knit_child('Child.Rmd', quiet=TRUE))
+}
+
+```
+
+```{r echo=FALSE}
+names(keep)<-(c("Name", "Method", "Estimate", "95% CI", "p-value"))
+pander(keep, split.cells = c(20, 20, 20, 20, 20))
+```
+
+## Graphs of results
+
+`r paste(out, collapse='\n')`
+

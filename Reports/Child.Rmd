@@ -1,0 +1,22 @@
+
+
+```{r echo=FALSE, results='asis'}
+load("../Output/results.RData")
+
+input <- data.frame(
+  name = sapply(list_save, "[[", 2),
+  units = sapply(list_save, "[[", 3),
+  stringsAsFactors = FALSE
+  )
+
+current <- input[i, ]
+  mr_input<-list_save[[i]][[4]]
+  #header
+  cat("###",current$name, "\n\n")
+  cat("Results of ", current$name, " (", current$units, ")\n")
+```
+
+
+```{r echo=FALSE, warning=FALSE, plotly=TRUE}
+mr_plot(mr_input)
+```
