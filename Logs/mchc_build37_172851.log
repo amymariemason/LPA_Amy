@@ -1,0 +1,6 @@
+This log file is showing which variants are missing from the I73 tsv file
+There are a total of   3  variants are missing from the input data 
+chr6:160543317
+chr6:160998199
+chr6:160493099
+More than one record found for these variants below 

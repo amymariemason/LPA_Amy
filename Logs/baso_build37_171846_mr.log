@@ -1,0 +1,34 @@
+
+ This log file is showing working on the merge and mr calculations with  baso_build37_171846  file 
+
+This shows an error if variants missing compared to outcome 
+ERROR 
+ 0 variants missing from outcome data
+chr pos
+
+This shows an error if variants missing compared to lpa 
+ERROR 
+ 3 variants missing from outcome data
+chr pos
+6 160543317
+6 160998199
+6 160493099
+WARNING
+ outcomespec gave warning in mr_ivw: 
+<simpleWarning in thetaIVW * Bx: Recycling array of length 1 in array-vector arithmetic is deprecated.
+  Use c() or as.vector() instead.
+>
+MR analysis results 
+
+Inverse-variance weighted method
+(variants correlated, random-effect model)
+
+Number of Variants : 40 
+
+------------------------------------------------------------------
+ Method Estimate Std Error 95% CI       p-value
+    IVW    0.000     0.000 0.000, 0.000   0.717
+------------------------------------------------------------------
+Residual standard error =  0.745 
+Residual standard error is set to 1 in calculation of confidence interval when its estimate is less than 1.
+Heterogeneity test statistic = 21.6351 on 39 degrees of freedom, (p-value = 0.9890)
